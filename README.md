@@ -17,6 +17,7 @@ This project demonstrates:
 ### Title: How I connected a React frontend to an ink! smart contract using Polkadot-API (PAPI)
 
 **Author:** Allan Robinson — Polkadot Africa Contributor
+
 **Date:** September 26, 2025
 
 ---
