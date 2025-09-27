@@ -1,0 +1,10 @@
+{
+  "chains": {
+    "westend": {
+      "rpc": "wss://westend-rpc.polkadot.io"
+    }
+  },
+  "contracts": {
+    "counter": "../contracts/counter.contract"
+  }
+}

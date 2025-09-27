@@ -1,0 +1,15 @@
+{
+  "version": 0,
+  "descriptorPath": ".papi/descriptors",
+  "entries": {
+    "westend": {
+      "chain": "westend2",
+      "metadata": ".papi/metadata/westend.scale",
+      "genesis": "0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e",
+      "codeHash": "0x5a55dfc559c7e8f6a475e413cb5ca85b7dd8d167df5dc402c0705a042b473343"
+    }
+  },
+  "ink": {
+    "counter": ".papi/contracts/counter.json"
+  }
+}
