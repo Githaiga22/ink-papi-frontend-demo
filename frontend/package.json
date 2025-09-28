@@ -7,13 +7,14 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-  "preview": "vite preview --host --port $PORT"
-
+    "preview": "vite preview --host --port $PORT"
   },
   "dependencies": {
     "@polkadot-api/client": "^0.1.0",
     "@polkadot-api/descriptors": "file:.papi/descriptors",
     "@polkadot-api/pjs-signer": "^0.6.15",
+    "@polkadot-api/ws-provider": "^0.6.0",
+    "@polkadot/api": "^16.4.8",
     "@polkadot/extension-dapp": "^0.62.1",
     "@substrate/connect": "^0.8.11",
     "react": "^19.1.1",
