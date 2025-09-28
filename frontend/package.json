@@ -13,6 +13,7 @@
     "@polkadot-api/client": "^0.1.0",
     "@polkadot-api/descriptors": "file:.papi/descriptors",
     "@polkadot-api/pjs-signer": "^0.6.15",
+    "@polkadot/extension-dapp": "^0.62.1",
     "@substrate/connect": "^0.8.11",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
