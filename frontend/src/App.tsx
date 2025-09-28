@@ -91,7 +91,7 @@ function App() {
       setLoading(true)
       
       // Check if extension is available first
-      if (!window.injectedWeb3 || !window.injectedWeb3['polkadot-js']) {
+      if (!(window as any).injectedWeb3 || !(window as any).injectedWeb3['polkadot-js']) {
         throw new Error('Polkadot.js extension not found. Please install and refresh the page.')
       }
       
