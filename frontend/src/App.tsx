@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@polkadot-api/client'
-import { connectInjectedExtension, getInjectedExtensions } from '@polkadot-api/pjs-signer'
+import { web3Enable, web3Accounts, web3FromAddress } from '@polkadot/extension-dapp'
 import './App.css'
 
 // Contract address - mock address for testing
@@ -88,38 +88,44 @@ function App() {
     try {
       console.log('Connecting to Polkadot.js wallet...')
       setError(null)
+      setLoading(true)
       
-      if (typeof window === 'undefined') {
-        throw new Error('This app must run in a browser')
+      // Check if extension is available first
+      if (!window.injectedWeb3 || !window.injectedWeb3['polkadot-js']) {
+        throw new Error('Polkadot.js extension not found. Please install and refresh the page.')
       }
-
-      // Use the proper pjs-signer approach
-      const extensions = await getInjectedExtensions()
+      
+      // Enable with a unique app name to force fresh authorization
+      const appName = `ink-counter-${Date.now()}`
+      const extensions = await web3Enable(appName)
+      console.log('Extensions enabled:', extensions.length)
+      
       if (extensions.length === 0) {
-        throw new Error('No Polkadot.js extensions found. Please install the extension.')
+        throw new Error('Failed to enable extension. Please refresh and try again.')
       }
       
-      const extension = await connectInjectedExtension(extensions[0])
-      if (!extension) {
-        throw new Error('No extension found. Please install the Polkadot.js extension.')
-      }
+      // Force a fresh account request - this MUST trigger popup
+      console.log('Requesting accounts...')
+      const accounts = await web3Accounts()
+      console.log('Accounts received:', accounts.length)
       
-      console.log('Wallet connected successfully:', extension)
-      
-      // Get the first account
-      const accounts = await extension.getAccounts()
       if (accounts.length === 0) {
-        throw new Error('No accounts found in the extension.')
+        throw new Error('No accounts found or access denied. Please create an account in Polkadot.js extension and authorize this website.')
       }
       
-      setAccount(accounts[0].address)
-      console.log('Connected account:', accounts[0].address)
+      // Use first account (or implement account selection UI later)
+      const selectedAccount = accounts[0]
+      const injector = await web3FromAddress(selectedAccount.address)
       
-      setSigner(extension)
-      setError(null)
+      setAccount(selectedAccount.address)
+      setSigner(injector)
+      console.log('Wallet connected successfully:', selectedAccount.address)
+      
     } catch (error) {
       console.error('Failed to connect wallet:', error)
       setError('Failed to connect wallet: ' + (error as Error).message)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -278,16 +284,6 @@ function App() {
           >
             {loading ? 'Loading...' : 'Get Counter Value'}
           </button>
-          {!client && (
-            <p style={{color: 'orange', fontSize: '0.9rem', marginTop: '0.5rem'}}>
-              ⚠️ PAPI client not ready yet...
-            </p>
-          )}
-          {client && (
-            <p style={{color: 'green', fontSize: '0.9rem', marginTop: '0.5rem'}}>
-              ✅ PAPI client ready (trying real PAPI, fallback to mock if needed)
-            </p>
-          )}
           
           {counterValue !== null && (
             <div className="counter-display">
@@ -311,33 +307,9 @@ function App() {
           >
             Decrement
           </button>
-          {(!signer || !client) && (
-            <p style={{color: 'orange', fontSize: '0.9rem', marginTop: '0.5rem', textAlign: 'center'}}>
-              ⚠️ {!signer ? 'Wallet not connected' : 'PAPI client not ready'}
-            </p>
-          )}
-          {signer && client && (
-            <p style={{color: 'green', fontSize: '0.9rem', marginTop: '0.5rem', textAlign: 'center'}}>
-              ✅ Ready to interact! (Real PAPI with fallback)
-            </p>
-          )}
         </div>
 
-        <div className="instructions">
-          <h3>Instructions:</h3>
-          <ol>
-            <li>Install the <a href="https://polkadot.js.org/extension/" target="_blank" rel="noopener noreferrer">Polkadot.js extension</a> (✅ Done!)</li>
-            <li>Connect your wallet (✅ Done!)</li>
-            <li>Contract deployed (✅ Done! - Mock mode)</li>
-            <li>Start interacting with the counter! (✅ Ready!)</li>
-          </ol>
-          
-          <div className="deployment-notice">
-            <p><strong>🎉 Demo Ready!</strong> The application is now fully functional with mock data.</p>
-            <p>You can test all features: Get Counter Value, Increment, and Decrement buttons.</p>
-            <p><em>Note: This is using mock data for demonstration. For real deployment, run <code>npm run deploy</code>.</em></p>
-          </div>
-        </div>
+
       </main>
     </div>
   )
