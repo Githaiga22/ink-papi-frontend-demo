@@ -12,7 +12,7 @@ A beginner-friendly demo connecting a React frontend to an ink! smart contract u
 
 ## 🌐 Live Demo
 
-**🚀 [View Live Demo](https://your-deployment-url.vercel.app)** (Update after deployment)
+**🚀 [View Live Demo](https://ink-papi-frontend.vercel.app/)** 
 
 
 ## 🚀 Quick Start
